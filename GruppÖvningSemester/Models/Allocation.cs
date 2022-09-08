@@ -6,14 +6,12 @@ using System.Threading.Tasks;
 
 namespace GruppÖvningSemester.Models
 {
-    public class Employee
+    public class Allocation
     {
         [Key]
-        public int EmployeeId { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public int Age {  get;  set; }
-        ICollection<Request> Requests { get; set; }
         public int AllocationId { get; set; }
+        //public ICollection<string> VacationTitles { get; set; }
+        public ICollection<int> DaysLeft { get; set; }
+        public ICollection<int> MaxAmountOfDays { get; set; }
     }
 }
