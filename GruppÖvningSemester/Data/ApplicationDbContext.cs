@@ -16,7 +16,9 @@ namespace GruppÖvningSemester.Data
         }
 
         public DbSet<Employee> Employees { get; set; }
-
+        public DbSet<Allocation> Allocations { get; set; }
+        public DbSet<Request> Requests { get; set; }
+        public DbSet<VacationType> VacationTypes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -28,7 +30,6 @@ namespace GruppÖvningSemester.Data
                 LastName = "Svensson",
                 Age = 12,
             });
-
         }
     }
 }

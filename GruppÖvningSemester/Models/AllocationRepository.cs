@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using GruppÖvningSemester.Data;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,9 +9,12 @@ namespace GruppÖvningSemester.Models
 {
     public class AllocationRepository : IRepository<Allocation>
     {
-        private readonly IRepository<Allocation> _repository;
+        private readonly ApplicationDbContext _context;
 
-        public AllocationRepository(DbContextOptions options) : base(options) { }
+        public AllocationRepository(ApplicationDbContext context)
+        {
+            _context = context;
+        }
 
         public void Add(Allocation entity)
         {
@@ -22,9 +26,10 @@ namespace GruppÖvningSemester.Models
             throw new NotImplementedException();
         }
 
-        public Allocation GetById(int id)
+        public Allocation GetById(int allocationId)
         {
-            var foundAllocation = 
+            var foundAllocation = _context.Allocations.FirstOrDefault(a => a.AllocationId == allocationId);
+            return foundAllocation;
         }
 
         public void Remove(int id)
@@ -34,7 +39,7 @@ namespace GruppÖvningSemester.Models
 
         public void Update(Allocation entity)
         {
-            entity.DaysLeft -= 
+            entity.DaysLeft -= _context.Requests.Where(e => e.VacationId == entity.)
         }
     }
 }
