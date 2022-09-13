@@ -39,7 +39,7 @@ namespace GruppÖvningSemester.Models
 
         public void Update(Allocation entity)
         {
-            entity.DaysLeft -= _context.Requests.Where(e => e.VacationId == entity.)
+            //entity.DaysLeft -= _context.Requests.Where(e => e.VacationId == entity.)
         }
     }
 }

@@ -11,10 +11,12 @@ namespace GruppÖvningSemester.Models
     {
         [Key]
         public int AllocationId { get; set; }
-        //public ICollection<string> VacationTitles { get; set; }
-        [NotMapped]
-        public Dictionary<string, int> DaysLeft { get; set; } //The amount of integers in this collection should be equal to the amount of vacation type objects
-        [NotMapped]
-        public Dictionary<string, int> MaxAmountOfDays { get; set; }
+        public int EmployeeID { get; set; }
+        public ICollection<VacationType> VacationTypes { get; set; }
+
+        //[NotMapped]
+        //public Dictionary<string, int> DaysLeft { get; set; } //The amount of integers in this collection should be equal to the amount of vacation type objects
+        //[NotMapped]
+        //public Dictionary<string, int> MaxAmountOfDays { get; set; }
     }
 }

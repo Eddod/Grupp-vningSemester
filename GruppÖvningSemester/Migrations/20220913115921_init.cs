@@ -1,13 +1,25 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata;
+﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
-using System;
 
-namespace GruppÖvningSemester.Data.Migrations
+namespace GruppÖvningSemester.Migrations
 {
-    public partial class CreateIdentitySchema : Migration
+    public partial class init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "Allocations",
+                columns: table => new
+                {
+                    AllocationId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    EmployeeID = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Allocations", x => x.AllocationId);
+                });
+
             migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 columns: table => new
@@ -40,7 +52,12 @@ namespace GruppÖvningSemester.Data.Migrations
                     TwoFactorEnabled = table.Column<bool>(nullable: false),
                     LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
                     LockoutEnabled = table.Column<bool>(nullable: false),
-                    AccessFailedCount = table.Column<int>(nullable: false)
+                    AccessFailedCount = table.Column<int>(nullable: false),
+                    Discriminator = table.Column<string>(nullable: false),
+                    FirstName = table.Column<string>(nullable: true),
+                    LastName = table.Column<string>(nullable: true),
+                    Age = table.Column<int>(nullable: true),
+                    AllocationId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -48,11 +65,50 @@ namespace GruppÖvningSemester.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Requests",
+                columns: table => new
+                {
+                    RequestId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    VacationId = table.Column<int>(nullable: false),
+                    EmployeeId = table.Column<int>(nullable: false),
+                    StartDate = table.Column<DateTime>(nullable: false),
+                    DateEnd = table.Column<DateTime>(nullable: false),
+                    IsCancelled = table.Column<bool>(nullable: false),
+                    Status = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Requests", x => x.RequestId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "VacationTypes",
+                columns: table => new
+                {
+                    VacationID = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    VacationTitle = table.Column<string>(nullable: true),
+                    AmountOfDays = table.Column<int>(nullable: false),
+                    AllocationId = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_VacationTypes", x => x.VacationID);
+                    table.ForeignKey(
+                        name: "FK_VacationTypes_Allocations_AllocationId",
+                        column: x => x.AllocationId,
+                        principalTable: "Allocations",
+                        principalColumn: "AllocationId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     RoleId = table.Column<string>(nullable: false),
                     ClaimType = table.Column<string>(nullable: true),
                     ClaimValue = table.Column<string>(nullable: true)
@@ -73,7 +129,7 @@ namespace GruppÖvningSemester.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<string>(nullable: false),
                     ClaimType = table.Column<string>(nullable: true),
                     ClaimValue = table.Column<string>(nullable: true)
@@ -153,6 +209,11 @@ namespace GruppÖvningSemester.Data.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.InsertData(
+                table: "AspNetUsers",
+                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Discriminator", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName", "Age", "AllocationId", "FirstName", "LastName" },
+                values: new object[] { "fb5d9891-d19b-41fe-b586-17e32d08118a", 0, "4e842af5-ce01-4be6-97ee-9007a041108b", "Employee", null, false, false, null, null, null, null, null, false, "5483a7b0-b9c6-4a1a-afee-32e6afec7628", false, null, 12, 0, "Conny", "Svensson" });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -191,6 +252,11 @@ namespace GruppÖvningSemester.Data.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_VacationTypes_AllocationId",
+                table: "VacationTypes",
+                column: "AllocationId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -211,10 +277,19 @@ namespace GruppÖvningSemester.Data.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "Requests");
+
+            migrationBuilder.DropTable(
+                name: "VacationTypes");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Allocations");
         }
     }
 }
