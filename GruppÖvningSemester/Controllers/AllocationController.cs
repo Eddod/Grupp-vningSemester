@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 
 namespace GruppÖvningSemester.Controllers
 {
+    ///Instructions on how to use Roles from Identity package
+    ///https://learn.microsoft.com/en-us/aspnet/core/security/authorization/roles?view=aspnetcore-6.0
     [Authorize(Roles = "Admin")]
     public class AllocationController : Controller
     {
